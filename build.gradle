@@ -1,0 +1,79 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: 'application'
+//apply plugin: 'groovy'
+//apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+group 'co.com.choucair.winappdriver.proyectoCEP'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://pkgs.dev.azure.com/DEV-FormacionCH/f11a2ddb-f565-44a3-8710-e9e1472d29ee/_packaging/Choucair/maven/v1'
+    }
+}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.89")
+    }
+}
+ext {
+    versionCucumber = '7.6.0'
+    serenityVersion = '3.0.5'
+    serenityCucumberVersion = '3.0.5'
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    implementation 'io.appium:java-client:7.6.0'
+    implementation group: 'io.cucumber', name: 'datatable', version: "${versionCucumber}"
+    implementation group: 'junit', name: 'junit', version: '4.13.1'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.assertj:assertj-core:3.12.2'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.0-alpha5'
+    implementation "net.serenity-bdd:serenity-core:$rootProject.ext.serenityVersion"
+    testImplementation "net.serenity-bdd:serenity-junit:$rootProject.ext.serenityVersion"
+    implementation "net.serenity-bdd:serenity-screenplay:$rootProject.ext.serenityVersion"
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
+    implementation "net.serenity-bdd:serenity-cucumber:$rootProject.ext.serenityCucumberVersion"
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-rest', version: "${serenityVersion}"
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+    implementation group: 'org.json', name: 'json', version: '20231013'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.6.4'
+    implementation 'com.sikulix:sikulixapi:2.0.5'
+
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+
+    //LIBRERIAS CHOUCAIR
+    implementation(group: 'com.choucair', name: 'libreria', version: '2.1.2.5')
+
+    //BD
+    implementation 'org.postgresql:postgresql:42.6.0'
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre11'
+
+}
+
+
+test {
+    useJUnit {
+        include "**/*";
+        gradle.startParameter.continueOnFailure = true
+        testLogging.showStandardStreams = true
+        systemProperties System.getProperties()
+        systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+    }
+
+}
